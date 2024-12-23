@@ -1,29 +1,17 @@
-import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { UserModule } from './user/user.module';
-import { User } from './user/entities/user.entity';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
+import { ConfigModule } from './config/config.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { CredentialModule } from './modules/credential/credential.module';
+import { UserModule } from './modules/user/user.module';
+import { TrimMiddleware } from './shared/middlewares/trim.middleware';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot(),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get('DB_HOST'),
-        port: +configService.get('DB_PORT'),
-        username: configService.get('DB_USERNAME'),
-        password: configService.get('DB_PASSWORD'),
-        database: configService.get('DB_NAME'),
-        entities: [User],
-        synchronize: true,
-      }),
-      inject: [ConfigService],
-    }),
-    UserModule,
-  ],
+  imports: [ConfigModule, UserModule, CredentialModule, AuthModule],
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(TrimMiddleware).forRoutes('*');
+  }
+}
