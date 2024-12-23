@@ -1,4 +1,11 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { SignUpDto } from './sign-up.dto';
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
-export class LogInDto extends PartialType(SignUpDto) {}
+export class LogInDto {
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+
+  @IsString()
+  @IsNotEmpty()
+  password: string;
+}

@@ -25,7 +25,7 @@ export class CredentialService {
     return this.credentialRepository.save(credential);
   }
 
-  async findByUserId(userId: string): Promise<Credential> {
+  async getByUserId(userId: string): Promise<Credential> {
     const credential = await this.credentialRepository.findOne({
       where: { userId },
     });
@@ -35,11 +35,15 @@ export class CredentialService {
     return credential;
   }
 
+  comparePassword(password: string, hashedPassword: string): Promise<boolean> {
+    return bcrypt.compare(password, hashedPassword);
+  }
+
   async updatePassword(
     userId: string,
     updateCredentialDto: UpdateCredentialDto,
   ): Promise<Credential> {
-    const credential = await this.findByUserId(userId);
+    const credential = await this.getByUserId(userId);
     const hashedPassword = await bcrypt.hash(updateCredentialDto.password, 10);
     credential.password = hashedPassword;
     return this.credentialRepository.save(credential);

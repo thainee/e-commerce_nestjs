@@ -17,8 +17,13 @@ export class AuthController {
     };
   }
 
-  @Post()
-  logIn(@Body() logInDto: LogInDto) {
-    return this.authService.logIn(logInDto);
+  @Post('/login')
+  async logIn(@Body() logInDto: LogInDto) {
+    const accessToken = await this.authService.logIn(logInDto);
+
+    return {
+      message: 'Log in successful',
+      accessToken,
+    };
   }
 }
