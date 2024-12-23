@@ -1,12 +1,17 @@
-import { Module } from '@nestjs/common';
-import { DatabaseConfigModule } from './config/database-config.module';
-import { AuthModule } from './modules/auth/auth.module';
-import { UserModule } from './modules/user/user.module';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ConfigModule } from './config/config.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { CredentialModule } from './modules/credential/credential.module';
+import { UserModule } from './modules/user/user.module';
+import { TrimMiddleware } from './shared/middlewares/trim.middleware';
 
 @Module({
-  imports: [ConfigModule, DatabaseConfigModule, UserModule, AuthModule],
+  imports: [ConfigModule, UserModule, CredentialModule, AuthModule],
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(TrimMiddleware).forRoutes('*');
+  }
+}
