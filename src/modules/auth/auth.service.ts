@@ -1,16 +1,18 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { plainToInstance } from 'class-transformer';
+import { transformDto } from 'src/shared/utils/transform-dto.util';
 import { CredentialService } from '../credential/credential.service';
 import { CreateCredentialDto } from '../credential/dto/create-credential.dto';
 import { CreateUserDto } from '../user/dto/create-user.dto';
+import { User } from '../user/entities/user.entity';
 import { UserService } from '../user/user.service';
 import { LogInDto } from './dto/log-in.dto';
 import { SignUpDto } from './dto/sign-up.dto';
-import { User } from '../user/entities/user.entity';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     private userService: UserService,
     private credentialService: CredentialService,
@@ -23,13 +25,17 @@ export class AuthService {
       throw new BadRequestException('User already exists');
     }
 
-    const createUserDto = plainToInstance(CreateUserDto, signUpDto);
+    const createUserDto = transformDto(CreateUserDto, signUpDto, this.logger);
     const user = await this.userService.create(createUserDto);
 
-    const createCredentialDto = plainToInstance(CreateCredentialDto, {
-      userId: user.id,
-      password: signUpDto.password,
-    });
+    const createCredentialDto = transformDto(
+      CreateCredentialDto,
+      {
+        userId: user.id,
+        password: signUpDto.password,
+      },
+      this.logger,
+    );
     await this.credentialService.create(createCredentialDto);
 
     return this.generateToken(user);
