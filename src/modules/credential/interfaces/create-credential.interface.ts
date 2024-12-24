@@ -1,4 +1,6 @@
+import { User } from 'src/modules/user/entities/user.entity';
+
 export interface CreateCredentialInterface {
-  userId: string;
+  user: User;
   password: string;
 }

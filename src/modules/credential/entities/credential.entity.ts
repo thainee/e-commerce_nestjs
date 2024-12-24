@@ -13,9 +13,6 @@ export class Credential {
   id: string;
 
   @Column()
-  userId: string;
-
-  @Column()
   password: string;
 
   @OneToOne(() => User)

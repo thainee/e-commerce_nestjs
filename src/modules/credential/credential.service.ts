@@ -27,7 +27,7 @@ export class CredentialService {
 
   async getByUserId(userId: string): Promise<Credential> {
     const credential = await this.credentialRepository.findOne({
-      where: { userId },
+      where: { user: { id: userId } },
     });
     if (!credential) {
       throw new NotFoundException('Credential not found');

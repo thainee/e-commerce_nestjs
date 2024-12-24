@@ -23,7 +23,7 @@ export class AuthService {
     const user = await this.userService.create(signUpDto);
 
     await this.credentialService.create({
-      userId: user.id,
+      user,
       password: signUpDto.password,
     });
 
