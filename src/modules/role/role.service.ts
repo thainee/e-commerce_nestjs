@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateRoleDto } from './dto/create-role.dto';
@@ -20,11 +24,14 @@ export class RoleService {
   }
 
   getAll(): Promise<Role[]> {
-    return this.roleRepository.find();
+    return this.roleRepository.find({ where: { isActive: true } });
   }
 
   getById(id: string): Promise<Role> {
-    const role = this.roleRepository.findOneBy({ id });
+    const role = this.roleRepository.findOne({
+      where: { id },
+      relations: { users: true },
+    });
 
     if (!role) {
       throw new NotFoundException(`Role not found`);
@@ -53,6 +60,10 @@ export class RoleService {
 
   async remove(id: string): Promise<void> {
     const role = await this.getById(id);
+
+    if (role.users.length) {
+      throw new BadRequestException('Role has users');
+    }
 
     role.isActive = false;
 
