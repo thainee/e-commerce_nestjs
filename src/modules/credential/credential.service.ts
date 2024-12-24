@@ -2,9 +2,9 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { CreateCredentialDto } from './dto/create-credential.dto';
 import { UpdateCredentialDto } from './dto/update-credential.dto';
 import { Credential } from './entities/credential.entity';
+import { CreateCredentialInterface } from './interfaces/create-credential.interface';
 
 @Injectable()
 export class CredentialService {
@@ -13,12 +13,12 @@ export class CredentialService {
     private credentialRepository: Repository<Credential>,
   ) {}
 
-  async create(createCredentialDto: CreateCredentialDto): Promise<Credential> {
-    const hashedPassword = await bcrypt.hash(createCredentialDto.password, 10);
+  async create(credentialData: CreateCredentialInterface): Promise<Credential> {
+    const hashedPassword = await bcrypt.hash(credentialData.password, 10);
 
     const credential = new Credential();
     Object.assign(credential, {
-      ...createCredentialDto,
+      ...credentialData,
       password: hashedPassword,
     });
 
