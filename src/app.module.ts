@@ -5,9 +5,17 @@ import { CredentialModule } from './modules/credential/credential.module';
 import { UserModule } from './modules/user/user.module';
 import { TrimMiddleware } from './shared/middlewares/trim.middleware';
 import { RoleModule } from './modules/role/role.module';
+import { EndpointModule } from './modules/endpoint/endpoint.module';
 
 @Module({
-  imports: [ConfigModule, UserModule, CredentialModule, AuthModule, RoleModule],
+  imports: [
+    ConfigModule,
+    UserModule,
+    CredentialModule,
+    AuthModule,
+    RoleModule,
+    EndpointModule,
+  ],
   controllers: [],
   providers: [],
 })
