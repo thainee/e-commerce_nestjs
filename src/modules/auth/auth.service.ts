@@ -1,5 +1,11 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { DataSource } from 'typeorm';
 import { CredentialService } from '../credential/credential.service';
 import { User } from '../user/entities/user.entity';
 import { UserService } from '../user/user.service';
@@ -8,10 +14,13 @@ import { SignUpDto } from './dto/sign-up.dto';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     private userService: UserService,
     private credentialService: CredentialService,
     private jwtService: JwtService,
+    private readonly dataSource: DataSource,
   ) {}
 
   async signUp(signUpDto: SignUpDto) {
@@ -20,14 +29,28 @@ export class AuthService {
       throw new BadRequestException('User already exists');
     }
 
-    const user = await this.userService.create(signUpDto);
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
-    await this.credentialService.create({
-      user,
-      password: signUpDto.password,
-    });
+    try {
+      const user = await this.userService.create(signUpDto);
 
-    return this.generateToken(user);
+      await this.credentialService.create({
+        user,
+        password: signUpDto.password,
+      });
+
+      await queryRunner.commitTransaction();
+
+      return this.generateToken(user);
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      this.logger.error(error);
+      throw new InternalServerErrorException('Failed to complete sign-up');
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   async logIn(logInDto: LogInDto) {
