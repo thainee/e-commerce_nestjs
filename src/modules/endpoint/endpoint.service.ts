@@ -1,9 +1,9 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { INestApplication, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { CreateEndpointDto } from './dto/create-endpoint.dto';
 import { Endpoint } from './entities/endpoint.entity';
-import { CreateEndpoint } from './types/create-endpoint.type';
+import { getAllRoutes } from 'src/shared/utils/get-all-routes.util';
 
 @Injectable()
 export class EndpointService {
@@ -23,10 +23,12 @@ export class EndpointService {
     return this.endpointRepository.save(endpoint);
   }
 
-  async synchronizeEndpoints(endpoints: CreateEndpoint[]): Promise<void> {
+  async synchronizeEndpoints(app: INestApplication): Promise<void> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
+
+    const endpoints = getAllRoutes(app);
 
     try {
       await queryRunner.manager.clear(Endpoint);
