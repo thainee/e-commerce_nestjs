@@ -13,12 +13,12 @@ export class Credential {
   id: string;
 
   @Column()
-  userId: string;
-
-  @Column()
   password: string;
 
   @OneToOne(() => User)
   @JoinColumn()
   user: User;
+
+  @Column({ default: true })
+  isActive: boolean;
 }

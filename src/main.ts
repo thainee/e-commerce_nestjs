@@ -1,7 +1,8 @@
-import { NestFactory } from '@nestjs/core';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { config } from './config/config';
+import { synchronizeEndpointsPermissions } from './shared/utils/synchronize-endpoints-permissions.util';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -10,6 +11,7 @@ async function bootstrap() {
     new ValidationPipe({
       transform: true,
       whitelist: true,
+      forbidNonWhitelisted: true,
     }),
   );
 
@@ -20,5 +22,7 @@ async function bootstrap() {
   });
 
   await app.listen(config.port);
+
+  await synchronizeEndpointsPermissions(app);
 }
 bootstrap();
