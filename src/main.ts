@@ -2,7 +2,7 @@ import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { config } from './config/config';
-import { EndpointService } from './modules/endpoint/endpoint.service';
+import { synchronizeEndpointsPermissions } from './shared/utils/synchronize-endpoints-permissions.util';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -21,11 +21,8 @@ async function bootstrap() {
     prefix: 'api/v',
   });
 
-  await app.init();
-
-  const endpointService = app.get(EndpointService);
-  await endpointService.synchronizeEndpoints(app);
-
   await app.listen(config.port);
+
+  await synchronizeEndpointsPermissions(app);
 }
 bootstrap();
