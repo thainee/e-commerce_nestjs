@@ -3,7 +3,7 @@ import { DataSource } from 'typeorm';
 import { getAllRoutes } from './get-all-routes.util';
 import { Endpoint } from 'src/modules/endpoint/entities/endpoint.entity';
 import { Role } from 'src/modules/role/entities/role.entity';
-import { Permission } from 'src/permission/entities/permission.entity';
+import { Permission } from 'src/modules/permission/entities/permission.entity';
 
 export async function synchronizeEndpointsPermissions(app: INestApplication) {
   const logger = new Logger('synchronizeEndpointsPermissions');

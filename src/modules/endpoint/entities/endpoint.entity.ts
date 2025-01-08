@@ -1,6 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { HttpMethod } from '../types/http-method.type';
-import { Permission } from 'src/permission/entities/permission.entity';
+import { Permission } from 'src/modules/permission/entities/permission.entity';
 
 @Entity('endpoints')
 export class Endpoint {

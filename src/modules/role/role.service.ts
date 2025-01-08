@@ -24,7 +24,7 @@ export class RoleService {
   }
 
   getAll(): Promise<Role[]> {
-    return this.roleRepository.find({ where: { isActive: true } });
+    return this.roleRepository.find();
   }
 
   getById(id: string): Promise<Role> {
@@ -65,8 +65,6 @@ export class RoleService {
       throw new BadRequestException('Role has users');
     }
 
-    role.isActive = false;
-
-    await this.roleRepository.save(role);
+    await this.roleRepository.softRemove(role);
   }
 }
