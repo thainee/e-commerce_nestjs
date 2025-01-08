@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { map } from 'rxjs/operators';
 import { ClassConstructor, plainToInstance } from 'class-transformer';
+import { ApiResponse } from '../interfaces/api-response.interface';
 
 @Injectable()
 export class TransformResponseDtoInterceptor<T> implements NestInterceptor {
@@ -13,11 +14,14 @@ export class TransformResponseDtoInterceptor<T> implements NestInterceptor {
 
   intercept(_context: ExecutionContext, next: CallHandler) {
     return next.handle().pipe(
-      map((data) =>
-        plainToInstance(this.dtoClass, data, {
-          excludeExtraneousValues: true,
-        }),
-      ),
+      map((response: ApiResponse<T>) => {
+        return {
+          ...response,
+          data: plainToInstance(this.dtoClass, response.data, {
+            excludeExtraneousValues: true,
+          }),
+        };
+      }),
     );
   }
 }

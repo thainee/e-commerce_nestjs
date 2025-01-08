@@ -1,5 +1,11 @@
 import slugify from 'slugify';
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BeforeInsert,
+  Column,
+  DeleteDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity('categories')
 export class Category {
@@ -14,6 +20,9 @@ export class Category {
 
   @Column({ unique: true })
   slug: string;
+
+  @DeleteDateColumn()
+  deletedDate?: Date;
 
   @BeforeInsert()
   generateSlug() {
