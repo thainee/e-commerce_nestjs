@@ -14,6 +14,7 @@ import { ResponseCategoryDto } from './dto/response-category.dto';
 import { AuthGuard } from 'src/shared/guards/auth.guard';
 import { TransformResponseDto } from 'src/shared/decorators/transform-response-dto.decorator';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { ResponseUpdateCategoryDto } from './dto/response-update-category.dto';
 
 @Controller('categories')
 @TransformResponseDto(ResponseCategoryDto)
@@ -23,7 +24,6 @@ export class CategoryController {
   @Post()
   @UseGuards(AuthGuard)
   async create(@Body() createCategoryDto: CreateCategoryDto) {
-    console.log('create');
     const category = await this.categoryService.create(createCategoryDto);
 
     return {
@@ -53,6 +53,7 @@ export class CategoryController {
   }
 
   @Patch(':id')
+  @TransformResponseDto(ResponseUpdateCategoryDto)
   async update(
     @Param('id') id: string,
     @Body() updateCategoryDto: UpdateCategoryDto,

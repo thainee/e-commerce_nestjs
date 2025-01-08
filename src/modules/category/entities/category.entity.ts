@@ -4,6 +4,8 @@ import {
   Column,
   DeleteDateColumn,
   Entity,
+  ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -22,7 +24,13 @@ export class Category {
   slug: string;
 
   @DeleteDateColumn()
-  deletedDate?: Date;
+  deletedDate: Date;
+
+  @ManyToOne(() => Category, (c) => c.childrenCategories)
+  parentCategory: Category;
+
+  @OneToMany(() => Category, (c) => c.parentCategory)
+  childrenCategories: Category[];
 
   @BeforeInsert()
   generateSlug() {
