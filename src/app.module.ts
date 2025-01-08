@@ -6,7 +6,7 @@ import { UserModule } from './modules/user/user.module';
 import { TrimMiddleware } from './shared/middlewares/trim.middleware';
 import { RoleModule } from './modules/role/role.module';
 import { EndpointModule } from './modules/endpoint/endpoint.module';
-import { PermissionModule } from './permission/permission.module';
+import { PermissionModule } from './modules/permission/permission.module';
 import { CategoryModule } from './modules/category/category.module';
 
 @Module({
