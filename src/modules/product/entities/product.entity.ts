@@ -3,6 +3,7 @@ import { Category } from 'src/modules/category/entities/category.entity';
 import {
   BeforeInsert,
   Column,
+  DeleteDateColumn,
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -36,6 +37,9 @@ export class Product {
 
   @ManyToOne(() => Category, (category) => category.products)
   category: Category;
+
+  @DeleteDateColumn()
+  deletedDate: Date;
 
   @BeforeInsert()
   generateSlug() {

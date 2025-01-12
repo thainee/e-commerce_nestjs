@@ -2,6 +2,9 @@ import { Expose, Transform } from 'class-transformer';
 
 export class ResponseProductDto {
   @Expose()
+  id: string;
+
+  @Expose()
   name: string;
 
   @Expose()
@@ -20,9 +23,12 @@ export class ResponseProductDto {
   quantity: number;
 
   @Expose()
+  slug: string;
+
+  @Expose()
   categoryId: string;
 
   @Expose()
-  @Transform(({ obj }) => obj.category.name)
+  @Transform(({ obj }) => obj.category?.name)
   category: string;
 }
