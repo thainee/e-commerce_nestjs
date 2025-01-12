@@ -7,6 +7,7 @@ import { Endpoint } from 'src/modules/endpoint/entities/endpoint.entity';
 import { Role } from 'src/modules/role/entities/role.entity';
 import { User } from 'src/modules/user/entities/user.entity';
 import { Permission } from 'src/modules/permission/entities/permission.entity';
+import { Product } from 'src/modules/product/entities/product.entity';
 
 @Module({
   imports: [
@@ -18,7 +19,15 @@ import { Permission } from 'src/modules/permission/entities/permission.entity';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
-        entities: [User, Credential, Role, Endpoint, Permission, Category],
+        entities: [
+          User,
+          Credential,
+          Role,
+          Endpoint,
+          Permission,
+          Category,
+          Product,
+        ],
         synchronize: true,
       }),
       inject: [ConfigService],

@@ -1,4 +1,5 @@
 import slugify from 'slugify';
+import { Product } from 'src/modules/product/entities/product.entity';
 import {
   BeforeInsert,
   Column,
@@ -31,6 +32,9 @@ export class Category {
 
   @OneToMany(() => Category, (c) => c.parentCategory)
   childrenCategories: Category[];
+
+  @OneToMany(() => Product, (product) => product.category)
+  products: Product[];
 
   @BeforeInsert()
   generateSlug() {

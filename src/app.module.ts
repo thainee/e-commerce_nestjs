@@ -8,6 +8,7 @@ import { RoleModule } from './modules/role/role.module';
 import { EndpointModule } from './modules/endpoint/endpoint.module';
 import { PermissionModule } from './modules/permission/permission.module';
 import { CategoryModule } from './modules/category/category.module';
+import { ProductModule } from './modules/product/product.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { CategoryModule } from './modules/category/category.module';
     EndpointModule,
     PermissionModule,
     CategoryModule,
+    ProductModule,
   ],
   controllers: [],
   providers: [],
