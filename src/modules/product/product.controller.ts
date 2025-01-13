@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
+import { Paginate, PaginateQuery } from 'nestjs-paginate';
 import { TransformResponseDto } from 'src/shared/decorators/transform-response-dto.decorator';
 import { CreateProductDto } from './dto/create-product.dto';
 import { ResponseProductDto } from './dto/response-product.dto';
@@ -30,8 +31,8 @@ export class ProductController {
   }
 
   @Get()
-  async getAll() {
-    const products = await this.productService.getAll();
+  async getAll(@Paginate() query: PaginateQuery) {
+    const products = await this.productService.getAll(query);
 
     return {
       message: 'Products fetched successfully',
